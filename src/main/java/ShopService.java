@@ -17,8 +17,17 @@ public class ShopService {
             products.add(productToOrder);
         }
 
-        Order newOrder = new Order(UUID.randomUUID().toString(), products);
+        Order newOrder = new Order(UUID.randomUUID().toString(), products, "PROCESSING"); // default value of orderStatus is PROCESSING
 
         return orderRepo.addOrder(newOrder);
+    }
+    public void changeOrderStatus(String orderId, String newStatus) {
+        Order order = orderRepo.getOrderById(orderId);
+        if (order == null) {
+            System.out.println("Order mit der Id: " + orderId + " konnte nicht gefunden werden!");
+            return;
+        }
+        orderRepo.removeOrder(orderId);
+        orderRepo.addOrder(new Order(order.id(), order.products(), newStatus));
     }
 }
